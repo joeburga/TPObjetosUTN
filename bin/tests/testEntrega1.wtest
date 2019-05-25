@@ -1,0 +1,137 @@
+import model.Locales.*
+import model.Canciones.*
+import model.Albumes.*
+import model.Presentaciones.*
+import model.Musicos.*
+import model.Guitarras.*
+
+
+describe "Pruebas correspondientes a la primera Entrega del TP Integrador - Music Guide Primera Iteracion"
+{
+
+	//Fechas Presentaciones
+	const fechaLuna = new Date(20,04,2017)
+	const fechaTrastienda = new Date(15,11,2017)
+	
+	//Fechas Lanzamientos
+	const lanzamientoFamilia = new Date(17,06,1992)
+	const lanzamientoSole = new Date(04,02,2005)	
+	const lanzamientoArboles = new Date(31,03,2003)
+	const lanzamientoCrisantemo = new Date(05,12,2007)
+	
+	//Canciones
+	const cisne = new Cancion("Cisne","Hoy el viento se abrio quedo vacio el aire una vez mas y el manantial broto y nadie esta aqui y puedo ver que solo estallan las hojas al brillar", 312)
+	const laFamilia = new Cancion("La Familia","Quiero brindar por mi gente sencilla, por el amor brindo por la familia", 264)
+	const eres = new Cancion("Eres","Eres lo mejor que me paso en la vida, no tengo duda, no habra mas nada despues de ti. Eres lo que le dio brillo al dia a dia, y asi sera por siempre, no cambiara,hasta el final de mis dias.", 145)
+	const corazonAmericano = new Cancion("Corazon Americano","Canta corazon, canta mas alto, que tu pena al fin se va marchando, el nuevo milenio ha de encontrarnos, junto corazon, como soñamos.", 154)
+	const almaDeDiamante = new Cancion("Alma De Diamante","Ven a mi con tu dulce luz alma de diamante. Y aunque el sol se nuble despues sos alma de diamante. Cielo o piel silencio o verdad sos alma de diamante. Por eso ven asi con la humanidad alma de diamante.", 216)
+	const crisantemo = new Cancion("Crisantemo","Tocame junto a esta pared, yo quede por aqui... cuando no hubo mas luz... quiero mirar a traves de mi piel... Crisantemo, que se abrio... encuentra el camino hacia el cielo.", 175)
+	
+	//Albumes
+	const especialLaFamilia = new Album("Especial La Familia",lanzamientoFamilia,100000,89000,#{laFamilia})
+	const laSole = new Album("La Sole",lanzamientoSole,200000,130000,#{eres,corazonAmericano})
+	const paraLosArboles = new Album("Para Los Arboles",lanzamientoArboles,50000,49000,#{cisne,almaDeDiamante})
+	const justCrisantemo = new Album("Just Crisantemo",lanzamientoCrisantemo,28000,27500,#{crisantemo})
+	
+	//Musicos
+	const joaquin = new MusicoDeGrupo(5,20,#{especialLaFamilia},"Pimpinela")
+	const lucia = new VocalistaPopular("familia",70,#{},"Pimpinela")
+		
+	//Presentaciones
+	const presentacionLuna = new Presentacion(fechaLuna, lunaPark, #{luisAlberto, joaquin, lucia},null)
+	const presentacionTrastienda = new Presentacion(fechaTrastienda, trastienda, #{luisAlberto, joaquin, lucia},null)
+	
+	//Tests
+		
+	test "La habilidad de Joaquin cantando en grupo es mayor"
+	{
+		assert.equals(25, joaquin.habilidad())
+	}
+	test "La habilidad de Joaquin estando solo es menor"
+	{
+		joaquin.dejarGrupo()
+		assert.equals(20, joaquin.habilidad())
+	}
+	test "La habilidad de Lucia es menor cantando en grupo"
+	{
+		assert.equals(50, lucia.habilidad())
+	}
+	test "La habilidad de Lucia es mayor siendo solista"
+	{
+		lucia.dejarGrupo()
+		assert.equals(70, lucia.habilidad())
+	}
+	test "La habilidad de Luis Alberto tocando con su Fender es siempre la misma"
+	{
+		assert.equals(80, luisAlberto.habilidad())
+	}
+	test "La habilidad de Luis Alberto tocando con la gibson sana es la maxima posible"
+	{
+		luisAlberto.cambiarGuitarra(gibson)
+		assert.equals(100, luisAlberto.habilidad())
+	}
+	test "La habilidad de Luis Alberto tocando con la gibson rota es la minima"
+	{
+		luisAlberto.cambiarGuitarra(gibson)
+		luisAlberto.maltratarGuitarra()
+		assert.equals(40, luisAlberto.habilidad())
+	}
+	test "Joaquin no interpreta bien la cancion LaFamilia"
+	{
+		assert.notThat(joaquin.laInterpretaBien(laFamilia))
+	}
+	test "Joaquin interpreta bien la cancion Cisne"
+	{
+		assert.that(joaquin.laInterpretaBien(cisne))
+	}
+	test "Lucia interpreta bien la cancion LaFamilia"
+	{
+		assert.that(lucia.laInterpretaBien(laFamilia))
+	}
+	test "Lucia no interpreta bien la cancion Cisne"
+	{
+		assert.notThat(lucia.laInterpretaBien(cisne))
+	}
+	test "Luis Alberto interpreta bien la cancion LaFamilia"
+	{
+		assert.that(luisAlberto.laInterpretaBien(laFamilia))
+	}
+	test "Luis Alberto interpreta bien la cancion Cisne"
+	{
+		assert.that(luisAlberto.laInterpretaBien(cisne))
+	}
+	test "Joaquin cobra menos por actuar con un grupo en el Luna"
+	{
+		assert.equals(50, joaquin.cobra(presentacionLuna))
+	}
+	test "Joaquin cobra mas por actuar solo en la Trastienda"
+	{
+		presentacionTrastienda.sacarArtista(lucia)
+		presentacionTrastienda.sacarArtista(luisAlberto)
+		assert.equals(100, joaquin.cobra(presentacionTrastienda))		
+	}
+	test "Lucia cobra mas por actuar en un lugar concurrido (Luna Park)"
+	{
+		assert.equals(500, lucia.cobra(presentacionLuna))
+	}
+	test "Lucia cobra menos por actuar en un lugar poco concurrido (Trastienda)"
+	{
+		assert.equals(400, lucia.cobra(presentacionTrastienda))
+	}
+	test "Luis Alberto cobra menos por actuar en una presentacion en el Luna antes de su fecha limite"
+	{
+		assert.equals(1000, luisAlberto.cobra(presentacionLuna))
+	}
+	test "Luis Alberto cobra mas por actuar en una presentacion en la Trastienda despues de su fecha limite"
+	{
+		assert.equals(1200, luisAlberto.cobra(presentacionTrastienda))
+	}
+	test "Se evalua el costo total de la presentacion en el Luna Park"
+	{
+		assert.equals(1550, presentacionLuna.costo())
+	}
+	test "Se evalua el costo total de la presentacion en la Trastienda"
+	{
+		assert.equals(1650, presentacionTrastienda.costo())
+	}
+}

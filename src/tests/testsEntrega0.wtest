@@ -1,0 +1,25 @@
+import model.Locales.*
+
+describe "Capacidad de un estadio/local en un determinado dia"
+{
+	const fecha1 = new Date(5, 8, 2017)
+	const fecha2 = new Date(8, 8, 2017)
+	
+
+	test "La capacidad de la trastienda para los d�as s�bado es superior"
+	{
+		assert.equals(700, trastienda.capacidad(fecha1))
+	}
+	test "La capacidad de la Trastienda para los otros dias es inferior"
+	{
+		assert.equals(400, trastienda.capacidad(fecha2))
+	}	
+	test "La capacidad del LunaPark siempre es la misma" 
+	{
+		assert.equals(9290, lunaPark.capacidad(fecha1))
+	}
+	test "La capacidad del LunaPark no depende del dia" 
+	{
+		assert.equals(9290, lunaPark.capacidad(fecha2))
+	}
+}

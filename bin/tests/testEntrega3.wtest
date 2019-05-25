@@ -1,0 +1,157 @@
+import model.Locales.*
+import model.Canciones.*
+import model.Albumes.*
+import model.Presentaciones.*
+import model.Musicos.*
+import model.Guitarras.*
+import model.Bandas.*
+
+describe "Pruebas correspondientes a la tercera Entrega del TP Integrador - Music Guide Tercera Iteracion"
+{
+	
+	//Fechas Presentaciones
+	const fechaLuna = new Date(20,04,2017)
+	const fechaTrastienda = new Date(15,11,2017)
+	const fechaPdepalooza = new Date(15,12,2017)
+	
+	//Fechas Lanzamientos
+	const lanzamientoFamilia = new Date(17,06,1992)
+	const lanzamientoSole = new Date(04,02,2005)	
+	const lanzamientoArboles = new Date(31,03,2003)
+	const lanzamientoCrisantemo = new Date(05,12,2007)
+	
+	//Canciones
+	const cisne = new Cancion("Cisne","Hoy el viento se abrio quedo vacio el aire una vez mas y el manantial broto y nadie esta aqui y puedo ver que solo estallan las hojas al brillar", 312)
+	const laFamilia = new Cancion("La Familia","Quiero brindar por mi gente sencilla, por el amor brindo por la familia", 264)
+	const eres = new Cancion("Eres","Eres lo mejor que me paso en la vida, no tengo duda, no habra mas nada despues de ti. Eres lo que le dio brillo al dia a dia, y asi sera por siempre, no cambiara,hasta el final de mis dias.", 145)
+	const corazonAmericano = new Cancion("Corazon Americano","Canta corazon, canta mas alto, que tu pena al fin se va marchando, el nuevo milenio ha de encontrarnos, junto corazon, como soñamos.", 154)
+	const almaDeDiamante = new Cancion("Alma De Diamante","Ven a mi con tu dulce luz alma de diamante. Y aunque el sol se nuble despues sos alma de diamante. Cielo o piel silencio o verdad sos alma de diamante. Por eso ven asi con la humanidad alma de diamante.", 216)
+	const crisantemo = new Cancion("Crisantemo","Tocame junto a esta pared, yo quede por aqui... cuando no hubo mas luz... quiero mirar a traves de mi piel... Crisantemo, que se abrio... encuentra el camino hacia el cielo.", 175)
+	const alicia = new Cancion("Cancion de Alicia en el pais","Quien sabe Alicia, este pais no estuvo hecho porque si. Te vas a ir, vas a salir pero te quedas, ¿donde mas vas a ir? Y es que aqui, sabes el trabalenguas, trabalenguas, el asesino te asesina, y es mucho para ti. Se acabo ese juego que te hacia feliz.",510)
+	
+	//Remixes
+	const remixLaFamilia = new Remix("RemixLaFamilia",laFamilia)
+	
+	//Mashups
+	const almaDeDiamanteCrisantemo = new Mashup("AlmaDiamante&Cristantemo",#{almaDeDiamante,crisantemo})
+	
+	//Albumes
+	const especialLaFamilia = new Album("Especial La Familia",lanzamientoFamilia,100000,89000,#{laFamilia})
+	const laSole = new Album("La Sole",lanzamientoSole,200000,130000,#{eres,corazonAmericano})
+	const paraLosArboles = new Album("Para Los Arboles",lanzamientoArboles,50000,49000,#{cisne,almaDeDiamante})
+	const justCrisantemo = new Album("Just Crisantemo",lanzamientoCrisantemo,28000,27500,#{crisantemo})
+	
+	//Musicos
+	const joaquin = new MusicoDeGrupo(5,20,#{especialLaFamilia},"Pimpinela")
+	const lucia = new VocalistaPopular("familia",70,#{},"Pimpinela")
+	const kike = new MusicoDeGrupo(20,60,#{},null)
+	const soledad = new VocalistaPopular("amor",55,#{laSole},null)
+
+	//Presentaciones
+	const presentacionLuna = new Presentacion(fechaLuna, lunaPark, #{luisAlberto, joaquin, lucia},null)
+	const presentacionTrastienda = new Presentacion(fechaTrastienda, trastienda, #{luisAlberto, joaquin, lucia},null)
+	
+	//TESTS DE LA 1º ENTREGA
+			
+	test "Joaquin canta bien la cancion “La Familia”."
+	{
+		assert.that(joaquin.ejecutaBienLaCancion(laFamilia))
+	}
+				
+	test "Joaquin canta bien la cancion “Cisne”."
+	{
+		assert.that(joaquin.ejecutaBienLaCancion(cisne))
+	}
+	
+	test "Lucia canta bien la cancion “Cisne” como solista"
+	{
+		lucia.dejarGrupo()
+		assert.that(lucia.ejecutaBienLaCancion(cisne))
+	}
+	
+	test "Lucia canta bien la cancion “La Familia” como solista"
+	{
+		lucia.dejarGrupo()
+		assert.that(lucia.ejecutaBienLaCancion(laFamilia))
+	}
+	
+	test "Lucia no canta bien la canción “Cisne” en el grupo Pimpinela"
+	{
+		assert.notThat(lucia.ejecutaBienLaCancion(cisne))
+	}
+	
+	test "Luis Alberto canta bien la cancion “La Familia”."
+	{
+		assert.that(luisAlberto.ejecutaBienLaCancion(laFamilia))
+	}
+	
+	test "Luis Alberto canta bien la cancion “Cisne”."
+	{
+		assert.that(luisAlberto.ejecutaBienLaCancion(cisne))
+	}
+	
+	//2º PARTE TESTS
+	
+	test "La cancion de mayor duracion del album “Especial La Familia” es “La Familia”."
+	{
+		assert.equals(laFamilia,especialLaFamilia.cancionMasLargaSegun(laDuracion))//cancionMayorDuracion
+	}
+	
+	test "La cancion de mayor duracion del album “La Sole” es “Corazon Americano”."
+	{
+		assert.equals(corazonAmericano,laSole.cancionMasLargaSegun(laDuracion))//cancionMayorDuracion
+	}
+	
+	test "La cancion de mayor longitud de letra del album “La Sole” es “Eres”."
+	{
+		assert.equals(eres,laSole.cancionMasLargaSegun(laLetra))//cancionMasLarga()
+	}
+		
+	test "Duracion del remix “La Familia” es 792"
+	{
+		assert.equals(792,remixLaFamilia.duracion())
+	}	
+	
+	test "La letra del remix de “La Familia” es “mueve tu cuelpo baby Quiero brindar por mi gente sencilla, por el amor brindo por la familia yeah oh yeah”."
+	{
+		assert.equals("mueve tu cuelpo baby Quiero brindar por mi gente sencilla, por el amor brindo por la familia yeah oh yeah",remixLaFamilia.letra())
+	}
+	
+	test "Duracion del mashup entre “Alma de Diamante” y “Crisantemo” es 216."
+	{
+		assert.equals(216,almaDeDiamanteCrisantemo.duracion())
+	}
+
+	test "La letra del mashup entre “Alma de Diamante” y “Crisantemo” es “Ven a mi con tu dulce luz alma de diamante. Y aunque el sol se nuble despues sos alma de diamante.
+									 Cielo o piel silencio o verdad sos alma de diamante. Por eso ven asi con la humanidad alma de diamante Tocame junto a esta pared, yo quede por aqui...
+									cuando no hubo mas luz... quiero mirar a traves de mi piel... Crisantemo, que se abrio... encuentra el camino hacia el cielo”."
+	{
+	 	assert.equals("Ven a mi con tu dulce luz alma de diamante. Y aunque el sol se nuble despues sos alma de diamante. Cielo o piel silencio o verdad sos alma de diamante. Por eso ven asi con la humanidad alma de diamante.Tocame junto a esta pared, yo quede por aqui... cuando no hubo mas luz... quiero mirar a traves de mi piel... Crisantemo, que se abrio... encuentra el camino hacia el cielo.",almaDeDiamanteCrisantemo.letra())
+	}
+	
+	test "Debe permitir agregar a Luis Alberto a la presentacion Pdepalooza"
+	{
+		pdepalooza.agregarArtista(luisAlberto)
+		assert.equals(#{luisAlberto},pdepalooza.tocan())
+	}
+	
+	test "Al agregar a Joaquin a la presentacion Pdepalooza da error de habilidad"
+	{
+		joaquin.dejarGrupo()
+		assert.throwsExceptionLike(new HabilidadInsuficienteException( "La habilidad debe ser mayor a 70" ), {pdepalooza.agregarArtista(joaquin)})
+	}
+	
+	test "Al agregar a Lucia a la presentacion Pdepalooza da error de autoria "
+	{
+		const lucia1 = new VocalistaPopular("familia",90,#{},"Pimpinela")
+		lucia1.dejarGrupo()
+		assert.throwsExceptionLike(new ComponerCancionException("Debe poseer al menos una cancion"), {pdepalooza.agregarArtista(lucia1)})
+	}
+	
+	test "Permite agregar a Soledad a la presentacion Pdepalooza "
+	{
+		const soledad1 = new VocalistaPopular("amor",80,#{laSole},null)
+		pdepalooza.agregarArtista(soledad1)
+		assert.equals(#{soledad1},pdepalooza.tocan())
+	}	
+}
