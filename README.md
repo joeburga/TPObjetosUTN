@@ -1,4 +1,4 @@
-# TP Integrador Objetos 
+# TP Integrador Objetos - UTN
 
-### TP Paradigma dde Objetos realizado en Wollok.
+### TP Paradigma de Objetos realizado en Wollok.
 
